@@ -47,6 +47,7 @@ mongoose
   )
   .then(() => {
     app.listen(9999);
+    console.log('Successful')
   })
   .catch(err => {
     console.log(err); 
