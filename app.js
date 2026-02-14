@@ -1,3 +1,4 @@
+require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 
@@ -7,8 +8,8 @@ const mongoose = require('mongoose');
 const usersRoutes = require('./routes/user.route');
 
 
-const HttpError = require('./models/http-error');
-require('dotenv').config();
+const HttpError = require('./models/http-error.model');
+
 const app = express();
 
 app.use(bodyParser.json());
