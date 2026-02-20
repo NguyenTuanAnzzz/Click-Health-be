@@ -164,7 +164,25 @@ const verifyEmail = async (req, res, next) => {
       return next(new HttpError("Invalid OTP.", 400));
     }
 
- 
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      await PendingUser.deleteOne({ email });
+      await Otp.deleteMany({ email });
+
+      const token = jwt.sign(
+        { userId: existingUser._id, email: existingUser.email },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
+
+      return res.status(200).json({
+        message: "Email already verified.",
+        userId: existingUser._id,
+        email: existingUser.email,
+        token,
+      });
+    }
+
     const pendingUser = await PendingUser.findOne({ email });
     if (!pendingUser) {
       return next(new HttpError("Registration expired.", 400));
@@ -203,6 +221,7 @@ const verifyEmail = async (req, res, next) => {
     });
 
   } catch (err) {
+    console.error("[verifyEmail] error:", err);
     return next(new HttpError("Verification failed.", 500));
   }
 };
