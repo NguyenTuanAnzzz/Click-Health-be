@@ -5,6 +5,7 @@ const usersController = require("../controllers/user.controller");
 const fileUpload = require("../middleware/file-upload.middleware");
 
 const router = express.Router();
+const checkAuth = require('../middleware/check-auth.middleware');
 
 router.post(
   "/signup",
@@ -43,12 +44,16 @@ router.post(
       .normalizeEmail()
       .isEmail()
       .withMessage("Please enter a valid email"),
+    check("password")
+      .not()
+      .isEmpty()
+      .withMessage("Password is required"),
   ],
   usersController.login,
 );
 
 router.post(
-  "/verify-email",
+  "/verify-otp",
   [
     check("otp")
       .not()
@@ -56,7 +61,23 @@ router.post(
       .isLength({ min: 6, max: 6 })
       .withMessage("OTP must be 6 digits"),
   ],
-  usersController.verifyEmail,
+  usersController.verifyOtp,
 );
+
+router.post("/resend-otp",[
+    check("otp")
+      .not()
+      .isEmpty()
+      .isLength({ min: 6, max: 6 })
+      .withMessage("OTP must be 6 digits"),
+  ], usersController.resendOtp)
+
+router.use(checkAuth); 
+
+
+
+router.get("/get-info",[
+
+], usersController.getInfo)
 
 module.exports = router;
