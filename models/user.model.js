@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
 
     avatar: {
       type: String,
-      default: "default-avatar.png", // có thể để ảnh mặc định
+      default: "default-avatar.png",
     },
 
     age: {
@@ -40,7 +40,19 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
-    // 🏥 Tiền sử bệnh
+    isActive: {
+      type: Boolean,
+      default: false,
+    },
+
+    otp: {
+      type: String,
+    },
+
+    otpCreatedAt: {
+      type: Date,
+    },
+
     medicalHistory: {
       previousStroke: { type: Boolean, default: false },
       hypertension: { type: Boolean, default: false },

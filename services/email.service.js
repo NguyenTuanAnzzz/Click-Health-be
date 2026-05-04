@@ -13,6 +13,6 @@ exports.sendOtpEmail = async (to, otp) => {
     from: process.env.EMAIL_USER,
     to,
     subject: "Your Verification Code",
-    text: `Your OTP code is ${otp}. It will expire in 10 minutes.`
+    text: `Your OTP code is ${otp}. It will expire in 1 minutes.`
   });
 };
