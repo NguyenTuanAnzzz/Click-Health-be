@@ -1,7 +1,7 @@
 const axios = require("axios");
 const HttpError = require("../models/http-error.model");
 
-const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
+const OVERPASS_URL = "https://overpass.kumi.systems/api/interpreter";
 
 const getNearbyHospital = async (req, res, next) => {
   try {
@@ -16,7 +16,7 @@ const getNearbyHospital = async (req, res, next) => {
 
     const userLat = Number(lat);
     const userLng = Number(lng);
-    const searchRadius = radius ? Number(radius) : 20000;
+    const searchRadius = radius ? Number(radius) : 7000;
 
     if (
       Number.isNaN(userLat) ||
