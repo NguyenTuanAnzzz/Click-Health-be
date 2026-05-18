@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema(
 
     age: {
       type: Number,
+      required: true,
       min: 0,
     },
 
@@ -61,6 +62,22 @@ const userSchema = new mongoose.Schema(
       highCholesterol: { type: Boolean, default: false },
       smoking: { type: Boolean, default: false },
       alcohol: { type: Boolean, default: false },
+    },
+
+    subscriptionStatus: {
+      type: String,
+      enum: ["NONE", "MONTH", "YEAR"],
+      default: "NONE",
+    },
+
+    subscriptionExpiry: {
+      type: Date,
+      default: null,
+    },
+
+    freeAttemptsLeft: {
+      type: Number,
+      default: 3,
     },
   },
   { timestamps: true },

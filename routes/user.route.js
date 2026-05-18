@@ -80,4 +80,14 @@ router.get("/get-info",[
 
 ], usersController.getInfo)
 
+router.patch(
+  "/update-profile",
+  [
+    check("fullName").optional().not().isEmpty().withMessage("Họ tên không được để trống"),
+    check("age").optional().isInt({ min: 1 }).withMessage("Tuổi phải là số dương"),
+    check("gender").optional().isIn(["MALE", "FEMALE", "OTHER"]).withMessage("Giới tính không hợp lệ"),
+  ],
+  usersController.updateProfile
+);
+
 module.exports = router;

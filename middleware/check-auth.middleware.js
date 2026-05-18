@@ -29,7 +29,7 @@ module.exports = (req, res, next) => {
     }
     
     req.userData = {
-      id: decodedToken.id,
+      id: decodedToken.userId, // Change from decodedToken.id to decodedToken.userId
       email: decodedToken.email,
       role: decodedToken.role
     };
