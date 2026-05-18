@@ -251,8 +251,43 @@ const getInfo = async (req, res, next) => {
   });
 };
 
+const updateProfile = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(new HttpError(errors.array()[0].msg, 422));
+  }
+
+  const { fullName, age, gender, medicalHistory, avatar } = req.body;
+  const userId = req.userData.id;
+
+  let user;
+  try {
+    user = await User.findById(userId);
+    if (!user) {
+      return next(new HttpError("Không tìm thấy người dùng.", 404));
+    }
+  } catch (err) {
+    return next(new HttpError("Cập nhật thất bại, vui lòng thử lại sau.", 500));
+  }
+
+  if (fullName) user.fullName = fullName;
+  if (age) user.age = age;
+  if (gender) user.gender = gender;
+  if (medicalHistory) user.medicalHistory = { ...user.medicalHistory, ...medicalHistory };
+  if (avatar) user.avatar = avatar;
+
+  try {
+    await user.save();
+  } catch (err) {
+    return next(new HttpError("Lưu thông tin thất bại, vui lòng thử lại.", 500));
+  }
+
+  res.status(200).json({ user: user.toObject({ getters: true }) });
+};
+
 exports.signup = signup;
 exports.login = login;
 exports.verifyOtp = verifyOtp
 exports.resendOtp = resendOtp
 exports.getInfo = getInfo;
+exports.updateProfile = updateProfile;
