@@ -1,6 +1,10 @@
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
+const dns = require('dns');
+
+// Force IPv4 resolution first to avoid ENETUNREACH IPv6 connection failures on Render
+dns.setDefaultResultOrder('ipv4first');
 
 const express = require('express');
 const bodyParser = require('body-parser');
