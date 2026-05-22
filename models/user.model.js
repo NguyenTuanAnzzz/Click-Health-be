@@ -79,6 +79,16 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 3,
     },
+
+    freeAttemptsBefastLeft: {
+      type: Number,
+      default: 3,
+    },
+
+    freeAttemptsBmiLeft: {
+      type: Number,
+      default: 3,
+    },
   },
   { timestamps: true },
 );

@@ -10,4 +10,7 @@ router.use(checkAuth);
 router.post("/save", befastHistoryControllers.saveHistory);
 router.get("/my-history", befastHistoryControllers.getMyHistory);
 
+router.post("/bmi", befastHistoryControllers.saveBmiHistory);
+router.get("/bmi", befastHistoryControllers.getMyBmiHistory);
+
 module.exports = router;
