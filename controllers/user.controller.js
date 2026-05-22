@@ -59,7 +59,12 @@ const signup = async (req, res, next) => {
 
       await existingUser.save();
 
-      await sendOtpEmail(email, otp);
+      try {
+        await sendOtpEmail(email, otp);
+      } catch (mailErr) {
+        console.error("CRITICAL: Failed to send OTP email:", mailErr);
+        console.log(`\n==================================================\n[DEV_OTP] Since email port is blocked on Render, here is the OTP for email ${email}: ${otp}\n==================================================\n`);
+      }
 
       return res.status(200).json({
         message: "New OTP sent. Please verify within 5 minutes.",
@@ -82,7 +87,12 @@ const signup = async (req, res, next) => {
       otpCreatedAt: new Date(),
     });
 
-    await sendOtpEmail(email, otp);
+    try {
+      await sendOtpEmail(email, otp);
+    } catch (mailErr) {
+      console.error("CRITICAL: Failed to send OTP email:", mailErr);
+      console.log(`\n==================================================\n[DEV_OTP] Since email port is blocked on Render, here is the OTP for email ${email}: ${otp}\n==================================================\n`);
+    }
 
     return res.status(201).json({
       message: "OTP sent. Please verify within 5 minutes.",
@@ -214,7 +224,12 @@ const resendOtp = async (req, res, next) => {
 
     await user.save();
 
-    await sendOtpEmail(email, otp);
+    try {
+      await sendOtpEmail(email, otp);
+    } catch (mailErr) {
+      console.error("CRITICAL: Failed to send OTP email:", mailErr);
+      console.log(`\n==================================================\n[DEV_OTP] Since email port is blocked on Render, here is the OTP for email ${email}: ${otp}\n==================================================\n`);
+    }
 
     return res.status(200).json({
       message: "New OTP sent. Please verify within 1 minutes.",
