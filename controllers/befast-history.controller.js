@@ -1,9 +1,11 @@
 const BefastHistory = require("../models/befast-history.model");
 const BmiHistory = require("../models/bmi-history.model");
 const HttpError = require("../models/http-error.model");
+const { normalizeBefastPayload } = require("../utils/befast-payload");
 
 const saveHistory = async (req, res, next) => {
-  const { balance, eyes, face, arm, speech, conclusion } = req.body;
+  const normalized = normalizeBefastPayload(req.body);
+  const { balance, eyes, face, arm, speech, conclusion } = normalized;
   const userId = req.userData.id;
 
   let user;

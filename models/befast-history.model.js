@@ -1,5 +1,20 @@
 const mongoose = require("mongoose");
 
+/** Kết quả từng hạng mục BEFAST (hỗ trợ realtime metrics) */
+const befastTestResultSchema = new mongoose.Schema(
+  {
+    is_abnormal: { type: Boolean, default: false },
+    message: { type: String },
+    realtime: { type: Boolean, default: false },
+    label: { type: String },
+    riskLevel: { type: String, enum: ["low", "medium", "high", null], default: null },
+    frameCount: { type: Number },
+    /** Toàn bộ chỉ số % từ AI realtime (stabilityLeft, swayPct, matchPct, ...) */
+    metrics: { type: mongoose.Schema.Types.Mixed, default: {} },
+  },
+  { _id: false }
+);
+
 const befastHistorySchema = new mongoose.Schema(
   {
     user: {
@@ -11,36 +26,19 @@ const befastHistorySchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    // B - Balance
-    balance: {
-      is_abnormal: Boolean,
-      message: String,
-    },
-    // E - Eyes
-    eyes: {
-      is_abnormal: Boolean,
-      message: String,
-    },
-    // F - Face
-    face: {
-      is_abnormal: Boolean,
-      deviation_percentage: Number,
-      message: String,
-    },
-    // A - Arm
-    arm: {
-      is_abnormal: Boolean,
-      message: String,
-    },
-    // S - Speech
-    speech: {
-      is_abnormal: Boolean,
-      message: String,
-    },
-    // Conclusion
+    balance: befastTestResultSchema,
+    eyes: befastTestResultSchema,
+    face: befastTestResultSchema,
+    arm: befastTestResultSchema,
+    speech: befastTestResultSchema,
     conclusion: {
       isDanger: { type: Boolean, default: false },
       totalScore: { type: Number, default: 0 },
+      analysisMode: {
+        type: String,
+        enum: ["realtime", "legacy", "hybrid"],
+        default: "realtime",
+      },
     },
   },
   { timestamps: true }
