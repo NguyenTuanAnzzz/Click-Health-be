@@ -1,11 +1,11 @@
-const PayOS = require("@payos/node");
+const { PayOS } = require("@payos/node");
 const User = require("../models/user.model");
 
-const payos = new PayOS(
-  process.env.PAYOS_CLIENT_ID || 'client-id',
-  process.env.PAYOS_API_KEY || 'api-key',
-  process.env.PAYOS_CHECKSUM_KEY || 'checksum-key'
-);
+const payos = new PayOS({
+  clientId: process.env.PAYOS_CLIENT_ID || 'client-id',
+  apiKey: process.env.PAYOS_API_KEY || 'api-key',
+  checksumKey: process.env.PAYOS_CHECKSUM_KEY || 'checksum-key'
+});
 
 const createPaymentUrl = async (req, res, next) => {
     let amount = req.body.amount;
