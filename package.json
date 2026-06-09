@@ -13,6 +13,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@payos/node": "^2.0.5",
     "axios": "^1.16.0",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
