@@ -300,9 +300,97 @@ const updateProfile = async (req, res, next) => {
   res.status(200).json({ user: user.toObject({ getters: true }) });
 };
 
+const forgotPassword = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(new HttpError(errors.array()[0].msg, 422));
+  }
+
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return next(new HttpError("Không tìm thấy người dùng với email này.", 404));
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const hashedOtp = await bcrypt.hash(otp, 10);
+
+    user.resetPasswordOtp = hashedOtp;
+    user.resetPasswordOtpCreatedAt = new Date();
+
+    await user.save({ validateBeforeSave: false });
+
+    try {
+      await sendOtpEmail(email, otp, true);
+    } catch (mailErr) {
+      console.error("CRITICAL: Failed to send reset password OTP email:", mailErr);
+      console.log(`\n==================================================\n[DEV_OTP] Reset password OTP for email ${email}: ${otp}\n==================================================\n`);
+    }
+
+    return res.status(200).json({
+      message: "Gửi mã OTP đặt lại mật khẩu thành công.",
+      email: user.email,
+    });
+  } catch (err) {
+    return next(new HttpError(err.message || "Failed to process forgot password request.", 500));
+  }
+};
+
+const resetPassword = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(new HttpError(errors.array()[0].msg, 422));
+  }
+
+  const { email, otp, newPassword } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return next(new HttpError("Không tìm thấy người dùng với email này.", 404));
+    }
+
+    if (!user.resetPasswordOtp || !user.resetPasswordOtpCreatedAt) {
+      return next(new HttpError("Mã xác thực không tồn tại. Vui lòng yêu cầu lại mã mới.", 400));
+    }
+
+    const elapsedMs = Date.now() - new Date(user.resetPasswordOtpCreatedAt).getTime();
+    const RESET_OTP_TTL_MS = 5 * 60 * 1000;
+
+    if (elapsedMs > RESET_OTP_TTL_MS) {
+      return next(new HttpError("Mã xác thực đã hết hạn. Vui lòng yêu cầu mã mới.", 400));
+    }
+
+    const isValidOtp = await bcrypt.compare(otp, user.resetPasswordOtp);
+
+    if (!isValidOtp) {
+      return next(new HttpError("Mã xác thực không đúng.", 400));
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    user.password = hashedPassword;
+    user.resetPasswordOtp = undefined;
+    user.resetPasswordOtpCreatedAt = undefined;
+
+    await user.save({ validateBeforeSave: false });
+
+    return res.status(200).json({
+      message: "Đặt lại mật khẩu thành công."
+    });
+  } catch (err) {
+    return next(new HttpError(err.message || "Failed to reset password.", 500));
+  }
+};
+
 exports.signup = signup;
 exports.login = login;
-exports.verifyOtp = verifyOtp
-exports.resendOtp = resendOtp
+exports.verifyOtp = verifyOtp;
+exports.resendOtp = resendOtp;
 exports.getInfo = getInfo;
 exports.updateProfile = updateProfile;
+exports.forgotPassword = forgotPassword;
+exports.resetPassword = resetPassword;

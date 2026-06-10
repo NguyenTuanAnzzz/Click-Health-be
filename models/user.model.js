@@ -54,6 +54,14 @@ const userSchema = new mongoose.Schema(
       type: Date,
     },
 
+    resetPasswordOtp: {
+      type: String,
+    },
+
+    resetPasswordOtpCreatedAt: {
+      type: Date,
+    },
+
     medicalHistory: {
       previousStroke: { type: Boolean, default: false },
       hypertension: { type: Boolean, default: false },
