@@ -36,10 +36,15 @@ const befastHistorySchema = new mongoose.Schema(
       totalScore: { type: Number, default: 0 },
       analysisMode: {
         type: String,
-        enum: ["realtime", "legacy", "hybrid"],
+        enum: ["realtime", "legacy", "hybrid", "mri_only"],
         default: "realtime",
       },
     },
+    mri: {
+      diagnosis: { type: String },
+      confidence_percent: { type: Number },
+      isDanger: { type: Boolean }
+    }
   },
   { timestamps: true }
 );
