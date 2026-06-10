@@ -6,6 +6,7 @@ const { normalizeBefastPayload } = require("../utils/befast-payload");
 const saveHistory = async (req, res, next) => {
   const normalized = normalizeBefastPayload(req.body);
   const { balance, eyes, face, arm, speech, conclusion } = normalized;
+  const mri = req.body.mri;
   const userId = req.userData.id;
 
   let user;
@@ -45,6 +46,7 @@ const saveHistory = async (req, res, next) => {
     arm,
     speech,
     conclusion,
+    mri,
   });
 
   try {
