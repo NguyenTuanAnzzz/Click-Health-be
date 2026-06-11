@@ -70,5 +70,8 @@ mongoose
 
   mongoose.connection.on('connected', () => {
   console.log('Connected to DB:', mongoose.connection.name);
+  
+  // Khởi động cronjob nhắc nhở người dùng
+  require('./services/cron.service');
 });
 

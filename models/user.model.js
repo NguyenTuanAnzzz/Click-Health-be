@@ -89,6 +89,11 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 3,
     },
+
+    lastActiveAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
   { timestamps: true },
 );

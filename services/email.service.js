@@ -178,3 +178,51 @@ exports.sendOtpEmail = async (to, otp) => {
   });
   console.log(`[SMTP] Legacy SMTP Email sent successfully to ${to}`);
 };
+
+exports.sendReminderEmail = async (to, name) => {
+  // Option A: Use Brevo (Sendinblue)
+  if (process.env.BREVO_API_KEY) {
+    const senderEmail = process.env.EMAIL_FROM || "nta26062k4developer@gmail.com";
+    try {
+      await axios.post(
+        "https://api.brevo.com/v3/smtp/email",
+        {
+          sender: { name: "Click Health", email: senderEmail },
+          to: [{ email: to }],
+          subject: "👀 Cú Click Health nhắc bạn nè!",
+          htmlContent: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+              <h2 style="color: #2563eb; text-align: center;">Click Health nhớ bạn! 🦉</h2>
+              <p>Chào <strong>${name}</strong>,</p>
+              <p>Hôm nay bạn chưa vào Click Health để theo dõi sức khỏe đó! Đừng làm đứt chuỗi (streak) của mình nhé, giống như học Duolingo vậy!</p>
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${process.env.FRONTEND_URL || 'https://click-health.app/home'}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Vào Click Health Ngay</a>
+              </div>
+              <p style="color: #888; font-size: 12px; text-align: center;">Nếu bạn đã kiểm tra rồi, xin hãy bỏ qua email này nhé.</p>
+            </div>
+          `
+        },
+        { headers: { "api-key": process.env.BREVO_API_KEY, "Content-Type": "application/json" } }
+      );
+      return;
+    } catch (err) {
+      console.error("[EMAIL_SERVICE] Reminder Brevo Failed:", err.message);
+    }
+  }
+
+  // Fallback to Nodemailer SMTP
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, 
+    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+    tls: { rejectUnauthorized: false }
+  });
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to,
+    subject: "👀 Cú Click Health nhắc bạn nè!",
+    text: `Chào ${name},\nHôm nay bạn chưa vào Click Health để theo dõi sức khỏe đó! Đừng làm đứt chuỗi (streak) của mình nhé.\n\nHãy quay lại ngay!`
+  });
+};

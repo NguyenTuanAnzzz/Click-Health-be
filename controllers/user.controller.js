@@ -138,6 +138,9 @@ const login = async (req, res, next) => {
     return next(new HttpError("Account is not activated.", 403))
   }
 
+  existingUser.lastActiveAt = new Date();
+  await existingUser.save();
+
   let token;
   try {
     token = jwt.sign(
@@ -257,6 +260,10 @@ const getInfo = async (req, res, next) => {
     if (!user) {
       return next(new HttpError("Not found", 404));
     }
+    
+    // Đánh dấu người dùng đang hoạt động
+    user.lastActiveAt = new Date();
+    await user.save();
   } catch (err) {
     return next(new HttpError("Failed.", 500));
   }
