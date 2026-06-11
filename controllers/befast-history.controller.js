@@ -80,6 +80,8 @@ const getMyHistory = async (req, res, next) => {
 
 const saveBmiHistory = async (req, res, next) => {
   const { 
+    age,
+    isForSelf,
     height, 
     weight, 
     bmi, 
@@ -122,7 +124,8 @@ const saveBmiHistory = async (req, res, next) => {
 
   const createdBmiHistory = new BmiHistory({
     user: userId,
-    userAge: user.age,
+    userAge: age || user.age,
+    isForSelf: isForSelf !== undefined ? isForSelf : true,
     height,
     weight,
     bmi,
