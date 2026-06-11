@@ -44,6 +44,10 @@ const befastHistorySchema = new mongoose.Schema(
       diagnosis: { type: String },
       confidence_percent: { type: Number },
       isDanger: { type: Boolean }
+    },
+    videoKey: { 
+      type: String, 
+      default: null 
     }
   },
   { timestamps: true }

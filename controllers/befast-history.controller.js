@@ -7,6 +7,7 @@ const saveHistory = async (req, res, next) => {
   const normalized = normalizeBefastPayload(req.body);
   const { balance, eyes, face, arm, speech, conclusion } = normalized;
   const mri = req.body.mri;
+  const videoKey = req.body.videoKey; // Nhận videoKey từ Frontend gửi lên
   const userId = req.userData.id;
 
   let user;
@@ -47,6 +48,7 @@ const saveHistory = async (req, res, next) => {
     speech,
     conclusion,
     mri,
+    videoKey,
   });
 
   try {
