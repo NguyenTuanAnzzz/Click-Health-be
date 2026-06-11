@@ -139,7 +139,8 @@ const login = async (req, res, next) => {
   }
 
   existingUser.lastActiveAt = new Date();
-  await existingUser.save();
+  // Bỏ 'await' để DB lưu ngầm trong background, không bắt người dùng phải chờ
+  existingUser.save().catch(err => console.log('Lỗi update lastActive:', err));
 
   let token;
   try {
@@ -261,9 +262,9 @@ const getInfo = async (req, res, next) => {
       return next(new HttpError("Not found", 404));
     }
     
-    // Đánh dấu người dùng đang hoạt động
+    // Đánh dấu người dùng đang hoạt động (không dùng await để chạy nền)
     user.lastActiveAt = new Date();
-    await user.save();
+    user.save().catch(err => console.log('Lỗi update lastActive:', err));
   } catch (err) {
     return next(new HttpError("Failed.", 500));
   }
@@ -295,7 +296,7 @@ const updateProfile = async (req, res, next) => {
   if (fullName) user.fullName = fullName;
   if (age) user.age = age;
   if (gender) user.gender = gender;
-  if (medicalHistory) user.medicalHistory = { ...user.medicalHistory, ...medicalHistory };
+  if (medicalHistory) Object.assign(user.medicalHistory, medicalHistory);
   if (avatar) user.avatar = avatar;
 
   try {

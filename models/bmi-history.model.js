@@ -54,6 +54,10 @@ const bmiHistorySchema = new mongoose.Schema(
     recommendation: {
       type: String,
     },
+    isForSelf: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );
