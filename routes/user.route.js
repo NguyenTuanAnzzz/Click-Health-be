@@ -112,6 +112,7 @@ router.get("/get-info",[
 
 router.patch(
   "/update-profile",
+  fileUpload.single("avatar"),
   [
     check("fullName").optional().not().isEmpty().withMessage("Họ tên không được để trống"),
     check("age").optional().isInt({ min: 1 }).withMessage("Tuổi phải là số dương"),

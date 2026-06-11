@@ -280,8 +280,19 @@ const updateProfile = async (req, res, next) => {
     return next(new HttpError(errors.array()[0].msg, 422));
   }
 
-  const { fullName, age, gender, medicalHistory, avatar } = req.body;
+  let { fullName, age, gender, medicalHistory } = req.body;
   const userId = req.userData.id;
+  
+  if (typeof medicalHistory === 'string') {
+    try {
+      medicalHistory = JSON.parse(medicalHistory);
+    } catch(e) {}
+  }
+  
+  let avatarUrl;
+  if (req.file) {
+    avatarUrl = req.file.path; // Cloudinary URL
+  }
 
   let user;
   try {
@@ -297,7 +308,7 @@ const updateProfile = async (req, res, next) => {
   if (age) user.age = age;
   if (gender) user.gender = gender;
   if (medicalHistory) Object.assign(user.medicalHistory, medicalHistory);
-  if (avatar) user.avatar = avatar;
+  if (avatarUrl) user.avatar = avatarUrl;
 
   try {
     await user.save();
