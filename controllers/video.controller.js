@@ -13,6 +13,7 @@ const uploadPrivateVideo = async (req, res, next) => {
       videoKey: fileName // Trả về key để bạn lưu vào document của Place/History
     });
   } catch (err) {
+    console.error('[MinIO Upload Error]', err);
     const error = new HttpError('Lưu video thất bại, vui lòng thử lại.', 500);
     return next(error);
   }

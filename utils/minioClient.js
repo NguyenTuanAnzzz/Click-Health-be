@@ -4,7 +4,7 @@ const path = require('path');
 
 // Nếu có biến môi trường R2_ENDPOINT thì dùng Cloudflare, không thì dùng localhost (Docker)
 const endPointHost = process.env.R2_ENDPOINT 
-  ? process.env.R2_ENDPOINT.replace('https://', '') // MinIO SDK chỉ cần host, không cần https://
+  ? process.env.R2_ENDPOINT.replace(/^https?:\/\//, '').replace(/\/$/, '') // Xóa https:// và dấu / ở cuối
   : 'localhost';
 
 const minioClient = new Minio.Client({
