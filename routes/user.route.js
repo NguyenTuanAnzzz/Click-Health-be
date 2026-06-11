@@ -72,6 +72,36 @@ router.post("/resend-otp",[
       .withMessage("OTP must be 6 digits"),
   ], usersController.resendOtp)
 
+router.post(
+  "/forgot-password",
+  [
+    check("email")
+      .normalizeEmail()
+      .isEmail()
+      .withMessage("Vui lòng nhập email hợp lệ"),
+  ],
+  usersController.forgotPassword
+);
+
+router.post(
+  "/reset-password",
+  [
+    check("email")
+      .normalizeEmail()
+      .isEmail()
+      .withMessage("Vui lòng nhập email hợp lệ"),
+    check("otp")
+      .not()
+      .isEmpty()
+      .isLength({ min: 6, max: 6 })
+      .withMessage("Mã OTP phải có đúng 6 chữ số"),
+    check("newPassword")
+      .isLength({ min: 6 })
+      .withMessage("Mật khẩu mới phải có ít nhất 6 ký tự"),
+  ],
+  usersController.resetPassword
+);
+
 router.use(checkAuth); 
 
 
