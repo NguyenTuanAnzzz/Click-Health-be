@@ -22,7 +22,7 @@ const createPaymentUrl = async (req, res, next) => {
     };
 
     try {
-        const paymentLinkResponse = await payos.createPaymentLink(requestData);
+        const paymentLinkResponse = await payos.paymentRequests.create(requestData);
         // Trả về paymentUrl thay vì checkoutUrl để frontend không cần sửa code
         res.status(200).json({ paymentUrl: paymentLinkResponse.checkoutUrl });
     } catch (error) {
@@ -36,7 +36,7 @@ const vnpayReturn = async (req, res, next) => {
 
     if (status === 'PAID' && cancel === 'false' && code === '00') {
         try {
-            const paymentInfo = await payos.getPaymentLinkInformation(orderCode);
+            const paymentInfo = await payos.paymentRequests.get(String(orderCode));
             
             if (paymentInfo && paymentInfo.status === 'PAID') {
                 const userId = req.userData.id;
