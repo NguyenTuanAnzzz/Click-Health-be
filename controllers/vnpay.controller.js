@@ -9,7 +9,10 @@ const payos = new PayOS({
 
 const createPaymentUrl = async (req, res, next) => {
     let amount = req.body.amount;
-    let returnUrl = process.env.VNP_RETURNURL || 'http://localhost:3000/payment-result';
+    // Tự động lấy origin (ví dụ http://localhost:3000 hoặc https://vercel.app) để redirect về đúng nơi người dùng đang đứng
+    let returnUrl = req.headers.origin 
+        ? `${req.headers.origin}/payment-result` 
+        : (process.env.VNP_RETURNURL || 'http://localhost:3000/payment-result');
     
     const orderCode = Number(String(Date.now()).slice(-6));
     
