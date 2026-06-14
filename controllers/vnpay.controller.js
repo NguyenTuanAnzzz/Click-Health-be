@@ -34,7 +34,7 @@ const createPaymentUrl = async (req, res, next) => {
 const vnpayReturn = async (req, res, next) => {
     const { code, cancel, status, orderCode } = req.query;
 
-    if (status === 'PAID' && cancel === 'false' && code === '00') {
+    if (code === '00' || status === 'PAID') {
         try {
             const paymentInfo = await payos.paymentRequests.get(String(orderCode));
             
@@ -64,7 +64,6 @@ const vnpayReturn = async (req, res, next) => {
                     }, { new: true });
 
                     if (updatedUser) {
-                        console.log(`[PAYOS DEBUG] UPDATED USER: ${updatedUser.email} to ${subStatus}`);
                         return res.status(200).json({ code: '00', message: 'Success' });
                     }
                 }
