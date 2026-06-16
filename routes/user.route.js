@@ -95,6 +95,7 @@ router.patch(
 router.get("/admin/stats", checkAuth.admin, usersController.getStats);
 router.get("/admin/users", checkAuth.admin, usersController.getAllUsers);
 router.patch("/admin/users/:userId/status", checkAuth.admin, usersController.toggleUserStatus);
+router.patch("/admin/users/:userId/verify", checkAuth.admin, usersController.verifyUser);
 router.patch("/admin/users/:userId/subscription", checkAuth.admin, usersController.updateSubscription);
 
 module.exports = router;
