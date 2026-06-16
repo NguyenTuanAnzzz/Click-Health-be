@@ -378,6 +378,23 @@ const toggleUserStatus = async (req, res, next) => {
   }
 };
 
+const verifyUser = async (req, res, next) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) return next(new HttpError("Không tìm thấy user", 404));
+    
+    user.isActive = true;
+    user.otp = undefined;
+    user.otpExpiry = undefined;
+    await user.save();
+    
+    res.json({ message: "Xác thực người dùng thành công", user });
+  } catch (err) {
+    return next(new HttpError("Xác thực thất bại", 500));
+  }
+};
+
 const updateSubscription = async (req, res, next) => {
   const { userId } = req.params;
   const { subscriptionStatus, durationMonths } = req.body;
@@ -415,3 +432,4 @@ exports.getStats = getStats;
 exports.getAllUsers = getAllUsers;
 exports.toggleUserStatus = toggleUserStatus;
 exports.updateSubscription = updateSubscription;
+exports.verifyUser = verifyUser;
