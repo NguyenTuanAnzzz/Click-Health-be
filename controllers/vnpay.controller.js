@@ -1,5 +1,6 @@
 const { PayOS } = require("@payos/node");
 const User = require("../models/user.model");
+const Package = require("../models/package.model");
 
 const payos = new PayOS({
   clientId: process.env.PAYOS_CLIENT_ID || 'client-id',
@@ -48,12 +49,15 @@ const vnpayReturn = async (req, res, next) => {
                 let subStatus = 'NONE';
                 let durationMonths = 0;
 
-                if (amount >= 40000 && amount <= 60000) {
+                const monthPkg = await Package.findOne({ code: 'MONTH' });
+                const yearPkg = await Package.findOne({ code: 'YEAR' });
+
+                if (monthPkg && amount === monthPkg.price) {
                     subStatus = 'MONTH';
-                    durationMonths = 1;
-                } else if (amount >= 400000 && amount <= 600000) {
+                    durationMonths = monthPkg.durationMonths;
+                } else if (yearPkg && amount === yearPkg.price) {
                     subStatus = 'YEAR';
-                    durationMonths = 12;
+                    durationMonths = yearPkg.durationMonths;
                 }
 
                 if (subStatus !== 'NONE') {
