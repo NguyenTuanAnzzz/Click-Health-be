@@ -143,30 +143,11 @@ exports.sendOtpEmail = async (to, otp) => {
     }
   }
 
-  // Option B: Fallback to Nodemailer SMTP (Local development or legacy configurations)
-  console.log(`[EMAIL_SERVICE] RESEND_API_KEY not configured. Falling back to SMTP connection...`);
-  let targetIp = "smtp.gmail.com"; 
-  try {
-    const ips = await dns.resolve4("smtp.gmail.com");
-    if (ips && ips.length > 0) {
-      targetIp = ips[0];
-      console.log(`[SMTP_DNS] Resolved smtp.gmail.com to IPv4: ${targetIp}`);
-    }
-  } catch (dnsErr) {
-    console.error("[SMTP_DNS] DNS resolution failed, using fallback host:", dnsErr);
-  }
-
   const transporter = nodemailer.createTransport({
-    host: targetIp,
-    port: 587,
-    secure: false, 
+    service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS
-    },
-    tls: {
-      servername: "smtp.gmail.com", 
-      rejectUnauthorized: false     
     }
   });
 
@@ -212,11 +193,8 @@ exports.sendReminderEmail = async (to, name) => {
 
   // Fallback to Nodemailer SMTP
   const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false, 
-    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-    tls: { rejectUnauthorized: false }
+    service: 'gmail',
+    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
   });
 
   await transporter.sendMail({

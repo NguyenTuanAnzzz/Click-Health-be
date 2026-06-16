@@ -138,6 +138,10 @@ const login = async (req, res, next) => {
     return next(new HttpError("Account is not activated.", 403))
   }
 
+  if (existingUser.isBlocked) {
+    return next(new HttpError("Account is blocked.", 403))
+  }
+
   existingUser.lastActiveAt = new Date();
   // Bỏ 'await' để DB lưu ngầm trong background, không bắt người dùng phải chờ
   existingUser.save().catch(err => console.log('Lỗi update lastActive:', err));
@@ -154,7 +158,8 @@ const login = async (req, res, next) => {
   }
 
   return res.json({
-    token
+    token,
+    user: existingUser.toObject({ getters: true })
   });
 };
 
@@ -178,7 +183,7 @@ const verifyOtp = async (req, res, next) => {
     }
 
     const elapsedMs = Date.now() - new Date(user.otpCreatedAt).getTime();
-    const OTP_TTL_MS = 60 * 1000;
+    const OTP_TTL_MS = 5 * 60 * 1000;
 
     if (elapsedMs > OTP_TTL_MS) {
       return next(new HttpError("OTP expired.", 400));
@@ -236,7 +241,7 @@ const resendOtp = async (req, res, next) => {
     }
 
     return res.status(200).json({
-      message: "New OTP sent. Please verify within 1 minutes.",
+      message: "New OTP sent. Please verify within 5 minutes.",
       email: user.email,
     });
   } catch (err) {
@@ -257,7 +262,7 @@ const getInfo = async (req, res, next) => {
 
   let user;
   try {
-    user = await User.findOne({ email });
+    user = await User.findOne({ email }).populate("role");
     if (!user) {
       return next(new HttpError("Not found", 404));
     }
@@ -312,6 +317,7 @@ const updateProfile = async (req, res, next) => {
 
   try {
     await user.save();
+    user = await User.findById(userId).populate("role");
   } catch (err) {
     return next(new HttpError("Lưu thông tin thất bại, vui lòng thử lại.", 500));
   }
@@ -319,9 +325,93 @@ const updateProfile = async (req, res, next) => {
   res.status(200).json({ user: user.toObject({ getters: true }) });
 };
 
+
+const getStats = async (req, res, next) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    
+    // Đếm số lượng theo trạng thái gói
+    const monthUsers = await User.countDocuments({ subscriptionStatus: "MONTH" });
+    const yearUsers = await User.countDocuments({ subscriptionStatus: "YEAR" });
+    const noneUsers = await User.countDocuments({ subscriptionStatus: "NONE" });
+
+    // Ước tính doanh thu: Month = 50.000, Year = 500.000
+    const estimatedRevenue = (monthUsers * 50000) + (yearUsers * 500000);
+
+    res.json({
+      totalUsers,
+      subscriptionStats: {
+        MONTH: monthUsers,
+        YEAR: yearUsers,
+        NONE: noneUsers
+      },
+      estimatedRevenue
+    });
+  } catch (err) {
+    return next(new HttpError("Lấy thống kê thất bại", 500));
+  }
+};
+
+const getAllUsers = async (req, res, next) => {
+  try {
+    const users = await User.find({}, "-password -otp").populate("role").sort({ createdAt: -1 });
+    res.json({ users });
+  } catch (err) {
+    return next(new HttpError("Lấy danh sách người dùng thất bại", 500));
+  }
+};
+
+const toggleUserStatus = async (req, res, next) => {
+  const { userId } = req.params;
+  const { isBlocked } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return next(new HttpError("Không tìm thấy user", 404));
+
+    user.isBlocked = isBlocked;
+    await user.save();
+
+    res.json({ message: "Cập nhật trạng thái thành công", user });
+  } catch (err) {
+    return next(new HttpError("Cập nhật trạng thái thất bại", 500));
+  }
+};
+
+const updateSubscription = async (req, res, next) => {
+  const { userId } = req.params;
+  const { subscriptionStatus, durationMonths } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return next(new HttpError("Không tìm thấy user", 404));
+
+    user.subscriptionStatus = subscriptionStatus;
+    
+    if (subscriptionStatus === "NONE") {
+      user.subscriptionExpiry = null;
+    } else {
+      const expiryDate = new Date();
+      expiryDate.setMonth(expiryDate.getMonth() + (durationMonths || 1));
+      user.subscriptionExpiry = expiryDate;
+      user.freeAttemptsLeft = 0; // Hủy giới hạn miễn phí
+    }
+
+    await user.save();
+    res.json({ message: "Cập nhật gói thành công", user });
+  } catch (err) {
+    return next(new HttpError("Cập nhật gói thất bại", 500));
+  }
+};
+
+
 exports.signup = signup;
 exports.login = login;
-exports.verifyOtp = verifyOtp
-exports.resendOtp = resendOtp
-exports.getInfo = getInfo;
+exports.verifyOtp = verifyOtp;
+exports.resendOtp = resendOtp;
 exports.updateProfile = updateProfile;
+exports.getInfo = getInfo;
+exports.getStats = getStats;
+exports.getAllUsers = getAllUsers;
+exports.toggleUserStatus = toggleUserStatus;
+exports.updateSubscription = updateSubscription;

@@ -40,4 +40,14 @@ module.exports = (req, res, next) => {
   }
 };
 
+module.exports.admin = (req, res, next) => {
+  module.exports(req, res, (err) => {
+    if (err) return next(err);
+    if (!req.userData || req.userData.role !== 'ADMIN') {
+      return next(new HttpError('Forbidden: Admin access required.', 403));
+    }
+    next();
+  });
+};
+
 
