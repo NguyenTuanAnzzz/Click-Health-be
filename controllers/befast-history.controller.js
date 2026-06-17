@@ -2,6 +2,7 @@ const BefastHistory = require("../models/befast-history.model");
 const BmiHistory = require("../models/bmi-history.model");
 const HttpError = require("../models/http-error.model");
 const { normalizeBefastPayload } = require("../utils/befast-payload");
+const { hasActiveSubscription } = require("../utils/subscription");
 
 const saveHistory = async (req, res, next) => {
   const normalized = normalizeBefastPayload(req.body);
@@ -19,15 +20,14 @@ const saveHistory = async (req, res, next) => {
     }
 
     // Kiểm tra quyền truy cập (Subscription hoặc Lượt thử miễn phí)
-    const now = new Date();
-    const hasActiveSubscription = user.subscriptionStatus !== 'NONE' && user.subscriptionExpiry && user.subscriptionExpiry > now;
+    const activeSubscription = hasActiveSubscription(user);
     
-    if (!hasActiveSubscription && user.freeAttemptsBefastLeft <= 0) {
+    if (!activeSubscription && user.freeAttemptsBefastLeft <= 0) {
       return next(new HttpError("Bạn đã hết lượt thử BeFast miễn phí. Vui lòng nâng cấp gói VIP để tiếp tục sử dụng.", 403));
     }
 
     // Nếu không có sub, trừ lượt thử miễn phí
-    if (!hasActiveSubscription) {
+    if (!activeSubscription) {
       user.freeAttemptsBefastLeft -= 1;
       // Đồng bộ trường cũ để tránh lỗi tương thích ngược
       user.freeAttemptsLeft = user.freeAttemptsBefastLeft;
@@ -107,15 +107,14 @@ const saveBmiHistory = async (req, res, next) => {
     }
 
     // Kiểm tra quyền truy cập (Subscription hoặc Lượt thử miễn phí)
-    const now = new Date();
-    const hasActiveSubscription = user.subscriptionStatus !== 'NONE' && user.subscriptionExpiry && user.subscriptionExpiry > now;
+    const activeSubscription = hasActiveSubscription(user);
     
-    if (!hasActiveSubscription && user.freeAttemptsBmiLeft <= 0) {
+    if (!activeSubscription && user.freeAttemptsBmiLeft <= 0) {
       return next(new HttpError("Bạn đã hết lượt thử BMI/Đột quỵ miễn phí. Vui lòng nâng cấp gói VIP để tiếp tục sử dụng.", 403));
     }
 
     // Nếu không có sub, trừ lượt thử miễn phí
-    if (!hasActiveSubscription) {
+    if (!activeSubscription) {
       user.freeAttemptsBmiLeft -= 1;
       await user.save();
     }

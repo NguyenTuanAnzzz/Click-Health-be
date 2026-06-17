@@ -7,6 +7,7 @@ const HttpError = require("../models/http-error.model");
 const User = require("../models/user.model");
 const Role = require("../models/role.model");
 
+const SUBSCRIPTION_STATUSES = ["NONE", "MONTH", "YEAR"];
 
 const OTP_TTL_MS = 5 * 60 * 1000;
 
@@ -399,6 +400,10 @@ const updateSubscription = async (req, res, next) => {
   const { userId } = req.params;
   const { subscriptionStatus, durationMonths } = req.body;
 
+  if (!SUBSCRIPTION_STATUSES.includes(subscriptionStatus)) {
+    return next(new HttpError("Gói dịch vụ không hợp lệ", 400));
+  }
+
   try {
     const user = await User.findById(userId);
     if (!user) return next(new HttpError("Không tìm thấy user", 404));
@@ -412,6 +417,8 @@ const updateSubscription = async (req, res, next) => {
       expiryDate.setMonth(expiryDate.getMonth() + (durationMonths || 1));
       user.subscriptionExpiry = expiryDate;
       user.freeAttemptsLeft = 0; // Hủy giới hạn miễn phí
+      user.freeAttemptsBefastLeft = 0;
+      user.freeAttemptsBmiLeft = 0;
     }
 
     await user.save();

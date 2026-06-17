@@ -67,7 +67,9 @@ const vnpayReturn = async (req, res, next) => {
                     const updatedUser = await User.findByIdAndUpdate(userId, {
                         subscriptionStatus: subStatus,
                         subscriptionExpiry: expiryDate,
-                        freeAttemptsLeft: 0
+                        freeAttemptsLeft: 0,
+                        freeAttemptsBefastLeft: 0,
+                        freeAttemptsBmiLeft: 0
                     }, { new: true });
 
                     if (updatedUser) {
