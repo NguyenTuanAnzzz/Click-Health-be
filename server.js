@@ -14,6 +14,7 @@ const placesRoutes = require('./routes/place.route');
 const befastHistoryRoutes = require('./routes/befast-history.route');
 const vnpayRoutes = require('./routes/vnpay.route');
 const packageRoutes = require('./routes/package.route');
+const exerciseRoutes = require('./routes/exercise.route');
 
 
 const HttpError = require('./models/http-error.model');
@@ -43,6 +44,7 @@ app.use('/api/places', placesRoutes);
 app.use('/api/history', befastHistoryRoutes);
 app.use('/api/payment', vnpayRoutes);
 app.use('/api/packages', packageRoutes);
+app.use('/api/exercises', exerciseRoutes);
 
 app.use((req, res, next) => {
   const error = new HttpError('Could not find this route.', 404);
