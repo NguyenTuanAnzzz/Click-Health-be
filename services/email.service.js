@@ -1,4 +1,4 @@
-const nodemailer = require("nodemailer");
+﻿const nodemailer = require("nodemailer");
 const dns = require("dns").promises;
 const axios = require("axios");
 
@@ -33,9 +33,9 @@ exports.sendOtpEmail = async (to, otp, isReset = false) => {
               </div>
               
               <div style="background-color: #f8fafc; border-radius: 12px; padding: 24px; margin-bottom: 32px;">
-                <h3 style="color: #1e293b; font-size: 18px; font-weight: 600; margin: 0 0 12px 0; text-align: center;">${isReset ? "Mã Xác Thực Đặt Lại Mật Khẩu" : "Mã Xác Thực OTP của bạn"}</h3>
+                <h3 style="color: #1e293b; font-size: 18px; font-weight: 600; margin: 0 0 12px 0; text-align: center;">${isReset ? "MÃ£ XÃ¡c Thá»±c Äáº·t Láº¡i Máº­t Kháº©u" : "MÃ£ XÃ¡c Thá»±c OTP cá»§a báº¡n"}</h3>
                 <p style="color: #475569; font-size: 14px; line-height: 1.6; margin: 0 0 24px 0; text-align: center;">
-                  Cảm ơn bạn đã lựa chọn Click Health. Vui lòng nhập mã OTP dưới đây để ${isReset ? "đặt lại mật khẩu của bạn" : "xác nhận tài khoản của bạn"}:
+                  Cáº£m Æ¡n báº¡n Ä‘Ã£ lá»±a chá»n Click Health. Vui lÃ²ng nháº­p mÃ£ OTP dÆ°á»›i Ä‘Ã¢y Ä‘á»ƒ ${isReset ? "Ä‘áº·t láº¡i máº­t kháº©u cá»§a báº¡n" : "xÃ¡c nháº­n tÃ i khoáº£n cá»§a báº¡n"}:
                 </p>
                 
                 <div style="text-align: center; margin: 24px 0;">
@@ -43,19 +43,19 @@ exports.sendOtpEmail = async (to, otp, isReset = false) => {
                 </div>
                 
                 <p style="color: #ef4444; font-size: 12px; text-align: center; margin: 0; font-weight: 500;">
-                  ⚠️ Mã OTP này có hiệu lực trong vòng 5 phút và chỉ sử dụng được 1 lần duy nhất.
+                  âš ï¸ MÃ£ OTP nÃ y cÃ³ hiá»‡u lá»±c trong vÃ²ng 5 phÃºt vÃ  chá»‰ sá»­ dá»¥ng Ä‘Æ°á»£c 1 láº§n duy nháº¥t.
                 </p>
               </div>
               
               <p style="color: #64748b; font-size: 14px; line-height: 1.6; margin: 0 0 24px 0;">
-                Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email hoặc liên hệ với bộ phận hỗ trợ của chúng tôi để được giải đáp.
+                Náº¿u báº¡n khÃ´ng thá»±c hiá»‡n yÃªu cáº§u nÃ y, vui lÃ²ng bá» qua email hoáº·c liÃªn há»‡ vá»›i bá»™ pháº­n há»— trá»£ cá»§a chÃºng tÃ´i Ä‘á»ƒ Ä‘Æ°á»£c giáº£i Ä‘Ã¡p.
               </p>
               
               <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 32px 0;" />
               
               <div style="text-align: center;">
-                <p style="color: #94a3b8; font-size: 12px; margin: 0 0 4px 0;">© 2026 Click Health. All rights reserved.</p>
-                <p style="color: #cbd5e1; font-size: 11px; margin: 0;">Email này được gửi tự động từ hệ thống Click Health.</p>
+                <p style="color: #94a3b8; font-size: 12px; margin: 0 0 4px 0;">Â© 2026 Click Health. All rights reserved.</p>
+                <p style="color: #cbd5e1; font-size: 11px; margin: 0;">Email nÃ y Ä‘Æ°á»£c gá»­i tá»± Ä‘á»™ng tá»« há»‡ thá»‘ng Click Health.</p>
               </div>
             </div>
           `
@@ -99,9 +99,9 @@ exports.sendOtpEmail = async (to, otp, isReset = false) => {
               </div>
               
               <div style="background-color: #f8fafc; border-radius: 12px; padding: 24px; margin-bottom: 32px;">
-                <h3 style="color: #1e293b; font-size: 18px; font-weight: 600; margin: 0 0 12px 0; text-align: center;">${isReset ? "Mã Xác Thực Đặt Lại Mật Khẩu" : "Mã Xác Thực OTP của bạn"}</h3>
+                <h3 style="color: #1e293b; font-size: 18px; font-weight: 600; margin: 0 0 12px 0; text-align: center;">${isReset ? "MÃ£ XÃ¡c Thá»±c Äáº·t Láº¡i Máº­t Kháº©u" : "MÃ£ XÃ¡c Thá»±c OTP cá»§a báº¡n"}</h3>
                 <p style="color: #475569; font-size: 14px; line-height: 1.6; margin: 0 0 24px 0; text-align: center;">
-                  Cảm ơn bạn đã lựa chọn Click Health. Vui lòng nhập mã OTP dưới đây để ${isReset ? "đặt lại mật khẩu của bạn" : "xác nhận tài khoản của bạn"}:
+                  Cáº£m Æ¡n báº¡n Ä‘Ã£ lá»±a chá»n Click Health. Vui lÃ²ng nháº­p mÃ£ OTP dÆ°á»›i Ä‘Ã¢y Ä‘á»ƒ ${isReset ? "Ä‘áº·t láº¡i máº­t kháº©u cá»§a báº¡n" : "xÃ¡c nháº­n tÃ i khoáº£n cá»§a báº¡n"}:
                 </p>
                 
                 <div style="text-align: center; margin: 24px 0;">
@@ -109,19 +109,19 @@ exports.sendOtpEmail = async (to, otp, isReset = false) => {
                 </div>
                 
                 <p style="color: #ef4444; font-size: 12px; text-align: center; margin: 0; font-weight: 500;">
-                  ⚠️ Mã OTP này có hiệu lực trong vòng 5 phút và chỉ sử dụng được 1 lần duy nhất.
+                  âš ï¸ MÃ£ OTP nÃ y cÃ³ hiá»‡u lá»±c trong vÃ²ng 5 phÃºt vÃ  chá»‰ sá»­ dá»¥ng Ä‘Æ°á»£c 1 láº§n duy nháº¥t.
                 </p>
               </div>
               
               <p style="color: #64748b; font-size: 14px; line-height: 1.6; margin: 0 0 24px 0;">
-                Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email hoặc liên hệ với bộ phận hỗ trợ của chúng tôi để được giải đáp.
+                Náº¿u báº¡n khÃ´ng thá»±c hiá»‡n yÃªu cáº§u nÃ y, vui lÃ²ng bá» qua email hoáº·c liÃªn há»‡ vá»›i bá»™ pháº­n há»— trá»£ cá»§a chÃºng tÃ´i Ä‘á»ƒ Ä‘Æ°á»£c giáº£i Ä‘Ã¡p.
               </p>
               
               <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 32px 0;" />
               
               <div style="text-align: center;">
-                <p style="color: #94a3b8; font-size: 12px; margin: 0 0 4px 0;">© 2026 Click Health. All rights reserved.</p>
-                <p style="color: #cbd5e1; font-size: 11px; margin: 0;">Email này được gửi tự động từ hệ thống Click Health.</p>
+                <p style="color: #94a3b8; font-size: 12px; margin: 0 0 4px 0;">Â© 2026 Click Health. All rights reserved.</p>
+                <p style="color: #cbd5e1; font-size: 11px; margin: 0;">Email nÃ y Ä‘Æ°á»£c gá»­i tá»± Ä‘á»™ng tá»« há»‡ thá»‘ng Click Health.</p>
               </div>
             </div>
           `
@@ -164,9 +164,9 @@ exports.sendOtpEmail = async (to, otp, isReset = false) => {
         </div>
         
         <div style="background-color: #f8fafc; border-radius: 12px; padding: 24px; margin-bottom: 32px;">
-          <h3 style="color: #1e293b; font-size: 18px; font-weight: 600; margin: 0 0 12px 0; text-align: center;">${isReset ? "Mã Xác Thực Đặt Lại Mật Khẩu" : "Mã Xác Thực OTP của bạn"}</h3>
+          <h3 style="color: #1e293b; font-size: 18px; font-weight: 600; margin: 0 0 12px 0; text-align: center;">${isReset ? "MÃ£ XÃ¡c Thá»±c Äáº·t Láº¡i Máº­t Kháº©u" : "MÃ£ XÃ¡c Thá»±c OTP cá»§a báº¡n"}</h3>
           <p style="color: #475569; font-size: 14px; line-height: 1.6; margin: 0 0 24px 0; text-align: center;">
-            Cảm ơn bạn đã lựa chọn Click Health. Vui lòng nhập mã OTP dưới đây để ${isReset ? "đặt lại mật khẩu của bạn" : "xác nhận tài khoản của bạn"}:
+            Cáº£m Æ¡n báº¡n Ä‘Ã£ lá»±a chá»n Click Health. Vui lÃ²ng nháº­p mÃ£ OTP dÆ°á»›i Ä‘Ã¢y Ä‘á»ƒ ${isReset ? "Ä‘áº·t láº¡i máº­t kháº©u cá»§a báº¡n" : "xÃ¡c nháº­n tÃ i khoáº£n cá»§a báº¡n"}:
           </p>
           
           <div style="text-align: center; margin: 24px 0;">
@@ -174,19 +174,19 @@ exports.sendOtpEmail = async (to, otp, isReset = false) => {
           </div>
           
           <p style="color: #ef4444; font-size: 12px; text-align: center; margin: 0; font-weight: 500;">
-            ⚠️ Mã OTP này có hiệu lực trong vòng 5 phút và chỉ sử dụng được 1 lần duy nhất.
+            âš ï¸ MÃ£ OTP nÃ y cÃ³ hiá»‡u lá»±c trong vÃ²ng 5 phÃºt vÃ  chá»‰ sá»­ dá»¥ng Ä‘Æ°á»£c 1 láº§n duy nháº¥t.
           </p>
         </div>
         
         <p style="color: #64748b; font-size: 14px; line-height: 1.6; margin: 0 0 24px 0;">
-          Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email hoặc liên hệ với bộ phận hỗ trợ của chúng tôi để được giải đáp.
+          Náº¿u báº¡n khÃ´ng thá»±c hiá»‡n yÃªu cáº§u nÃ y, vui lÃ²ng bá» qua email hoáº·c liÃªn há»‡ vá»›i bá»™ pháº­n há»— trá»£ cá»§a chÃºng tÃ´i Ä‘á»ƒ Ä‘Æ°á»£c giáº£i Ä‘Ã¡p.
         </p>
         
         <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 32px 0;" />
         
         <div style="text-align: center;">
-          <p style="color: #94a3b8; font-size: 12px; margin: 0 0 4px 0;">© 2026 Click Health. All rights reserved.</p>
-          <p style="color: #cbd5e1; font-size: 11px; margin: 0;">Email này được gửi tự động từ hệ thống Click Health.</p>
+          <p style="color: #94a3b8; font-size: 12px; margin: 0 0 4px 0;">Â© 2026 Click Health. All rights reserved.</p>
+          <p style="color: #cbd5e1; font-size: 11px; margin: 0;">Email nÃ y Ä‘Æ°á»£c gá»­i tá»± Ä‘á»™ng tá»« há»‡ thá»‘ng Click Health.</p>
         </div>
       </div>
     `
@@ -195,6 +195,41 @@ exports.sendOtpEmail = async (to, otp, isReset = false) => {
 };
 
 exports.sendReminderEmail = async (to, name) => {
+  const displayName = name || "bạn";
+  const frontendUrl = process.env.FRONTEND_URL || "https://click-health.app/home";
+  const subject = "Click Health nhắc bạn kiểm tra sức khỏe hằng tuần";
+  const escapedName = String(displayName).replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  }[char]));
+
+  const text = [
+    `Chào ${displayName},`,
+    "",
+    "Đã hơn 7 ngày bạn chưa quay lại Click Health.",
+    "Hãy dành vài phút để theo dõi sức khỏe và duy trì thói quen chăm sóc bản thân nhé.",
+    "",
+    `Truy cập Click Health: ${frontendUrl}`,
+    "",
+    "Nếu bạn đã kiểm tra rồi, vui lòng bỏ qua email này.",
+  ].join("\n");
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 24px; border: 1px solid #ddd; border-radius: 10px;">
+      <h2 style="color: #2563eb; text-align: center; margin: 0 0 20px;">Click Health nhắc bạn</h2>
+      <p>Chào <strong>${escapedName}</strong>,</p>
+      <p>Đã hơn 7 ngày bạn chưa quay lại Click Health.</p>
+      <p>Hãy dành vài phút để theo dõi sức khỏe và duy trì thói quen chăm sóc bản thân nhé.</p>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${frontendUrl}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Vào Click Health ngay</a>
+      </div>
+      <p style="color: #888; font-size: 12px; text-align: center;">Nếu bạn đã kiểm tra rồi, vui lòng bỏ qua email này.</p>
+    </div>
+  `;
+
   // Option A: Use Brevo (Sendinblue)
   if (process.env.BREVO_API_KEY) {
     const senderEmail = process.env.EMAIL_FROM || "nta26062k4developer@gmail.com";
@@ -204,24 +239,14 @@ exports.sendReminderEmail = async (to, name) => {
         {
           sender: { name: "Click Health", email: senderEmail },
           to: [{ email: to }],
-          subject: "👀 Cú Click Health nhắc bạn nè!",
-          htmlContent: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-              <h2 style="color: #2563eb; text-align: center;">Click Health nhớ bạn! 🦉</h2>
-              <p>Chào <strong>${name}</strong>,</p>
-              <p>Hôm nay bạn chưa vào Click Health để theo dõi sức khỏe đó! Đừng làm đứt chuỗi (streak) của mình nhé, giống như học Duolingo vậy!</p>
-              <div style="text-align: center; margin: 30px 0;">
-                <a href="${process.env.FRONTEND_URL || 'https://click-health.app/home'}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Vào Click Health Ngay</a>
-              </div>
-              <p style="color: #888; font-size: 12px; text-align: center;">Nếu bạn đã kiểm tra rồi, xin hãy bỏ qua email này nhé.</p>
-            </div>
-          `
+          subject,
+          htmlContent: html,
         },
         { headers: { "api-key": process.env.BREVO_API_KEY, "Content-Type": "application/json" } }
       );
       return;
     } catch (err) {
-      console.error("[EMAIL_SERVICE] Reminder Brevo Failed:", err.message);
+      console.error("[EMAIL_SERVICE] Gửi email nhắc nhở qua Brevo thất bại:", err.message);
     }
   }
 
@@ -234,7 +259,8 @@ exports.sendReminderEmail = async (to, name) => {
   await transporter.sendMail({
     from: process.env.EMAIL_USER,
     to,
-    subject: "👀 Cú Click Health nhắc bạn nè!",
-    text: `Chào ${name},\nHôm nay bạn chưa vào Click Health để theo dõi sức khỏe đó! Đừng làm đứt chuỗi (streak) của mình nhé.\n\nHãy quay lại ngay!`
+    subject,
+    text,
+    html,
   });
 };
