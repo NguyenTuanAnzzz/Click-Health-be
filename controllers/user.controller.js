@@ -6,6 +6,9 @@ const mongoose = require("mongoose");
 const HttpError = require("../models/http-error.model");
 const User = require("../models/user.model");
 const Role = require("../models/role.model");
+const { OAuth2Client } = require("google-auth-library");
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 
 const OTP_TTL_MS = 5 * 60 * 1000;
@@ -508,6 +511,131 @@ const resetPassword = async (req, res, next) => {
   }
 };
 
+const googleLogin = async (req, res, next) => {
+  const { token } = req.body;
+  if (!token) {
+    return next(new HttpError("Google token is required", 400));
+  }
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const { email, name, picture } = payload;
+
+    let user = await User.findOne({ email }).populate("role");
+
+    if (!user) {
+      // User doesn't exist, return info for them to complete registration
+      return res.status(200).json({
+        isNewUser: true,
+        googleData: {
+          email,
+          fullName: name,
+          avatar: picture
+        }
+      });
+    }
+
+    if (user.isBlocked) {
+      return next(new HttpError("Account is blocked.", 403));
+    }
+
+    if (!user.isActive) {
+      user.isActive = true;
+      user.otp = undefined;
+      user.otpCreatedAt = undefined;
+      await user.save();
+    }
+
+    user.lastActiveAt = new Date();
+    user.save().catch(err => console.log('Lỗi update lastActive:', err));
+
+    const jwtToken = jwt.sign(
+      { userId: user._id, email: user.email, role: user.role.name },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" },
+    );
+
+    return res.status(200).json({
+      token: jwtToken,
+      user: user.toObject({ getters: true })
+    });
+  } catch (err) {
+    console.error("Google login error:", err);
+    return next(new HttpError("Google login failed", 401));
+  }
+};
+
+const googleRegister = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(new HttpError(errors.array()[0].msg, 422));
+  }
+
+  const { token, age, gender, medicalHistory } = req.body;
+  if (!token) {
+    return next(new HttpError("Google token is required", 400));
+  }
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const { email, name, picture } = payload;
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return next(new HttpError("User already exists. Please login.", 422));
+    }
+
+    const roleDoc = await Role.findOne({ name: "PATIENT" });
+    const randomPassword = Math.random().toString(36).slice(-10) + Math.random().toString(36).slice(-10);
+    const hashedPassword = await bcrypt.hash(randomPassword, 12);
+
+    let parsedMedicalHistory = medicalHistory;
+    if (typeof medicalHistory === 'string') {
+      try {
+        parsedMedicalHistory = JSON.parse(medicalHistory);
+      } catch(e) {}
+    }
+
+    const createdUser = await User.create({
+      fullName: name,
+      email,
+      password: hashedPassword,
+      age,
+      gender,
+      role: roleDoc._id,
+      medicalHistory: parsedMedicalHistory,
+      avatar: picture,
+      isActive: true, 
+    });
+
+    const populatedUser = await User.findById(createdUser._id).populate("role");
+
+    const jwtToken = jwt.sign(
+      { userId: populatedUser._id, email: populatedUser.email, role: populatedUser.role.name },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" },
+    );
+
+    return res.status(201).json({
+      token: jwtToken,
+      user: populatedUser.toObject({ getters: true })
+    });
+
+  } catch (err) {
+    console.error("Google register error:", err);
+    return next(new HttpError("Google registration failed.", 500));
+  }
+};
+
+
 exports.signup = signup;
 exports.login = login;
 exports.verifyOtp = verifyOtp;
@@ -521,3 +649,5 @@ exports.updateSubscription = updateSubscription;
 exports.verifyUser = verifyUser;
 exports.forgotPassword = forgotPassword;
 exports.resetPassword = resetPassword;
+exports.googleLogin = googleLogin;
+exports.googleRegister = googleRegister;

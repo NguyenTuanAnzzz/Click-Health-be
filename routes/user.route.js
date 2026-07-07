@@ -52,6 +52,21 @@ router.post(
   usersController.login,
 );
 
+router.post("/google-login", usersController.googleLogin);
+
+router.post(
+  "/google-register",
+  [
+    check("age")
+      .isInt({ min: 1 })
+      .withMessage("Age must be a positive number"),
+    check("gender")
+      .isIn(["MALE", "FEMALE", "OTHER"])
+      .withMessage("Invalid gender value"),
+  ],
+  usersController.googleRegister
+);
+
 router.post(
   "/verify-otp",
   [
