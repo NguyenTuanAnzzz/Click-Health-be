@@ -138,9 +138,6 @@ const login = async (req, res, next) => {
     return next(new HttpError("Invalid credentials, could not log you in.", 401));
   }
 
-  if (existingUser.authProvider === 'GOOGLE') {
-    return next(new HttpError("Tài khoản này được đăng ký bằng Google, vui lòng đăng nhập bằng nút Google.", 403));
-  }
 
   if (!existingUser.isActive) {
     return next(new HttpError("Account is not activated.", 403))
@@ -550,9 +547,6 @@ const googleLogin = async (req, res, next) => {
       });
     }
 
-    if (user.authProvider === 'LOCAL') {
-      return next(new HttpError("Tài khoản này được đăng ký bằng Mật khẩu, vui lòng nhập mật khẩu để đăng nhập.", 403));
-    }
 
     if (user.isBlocked) {
       return next(new HttpError("Account is blocked.", 403));
