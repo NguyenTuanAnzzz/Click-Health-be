@@ -107,6 +107,12 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    
+    authProvider: {
+      type: String,
+      enum: ["LOCAL", "GOOGLE"],
+      default: "LOCAL",
+    },
   },
   { timestamps: true },
 );
